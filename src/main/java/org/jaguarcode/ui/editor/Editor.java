@@ -19,14 +19,15 @@ import static org.jaguarcode.main.monoCode;
 @SuppressWarnings("serial")
 public class Editor extends JPanel implements DocumentListener {
 
-
     public static RSyntaxTextArea textPane;
     public static File file;
     public static boolean changed = false;
 
+    public static Component getTextEditor () {
+        return new Editor().CreateTextEditor();
+    }
 
-    public Editor() {
-        panelConfig();
+    public Component CreateTextEditor () {
         textPane = new RSyntaxTextArea(20,60);
         textPane.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
         textPane.setCodeFoldingEnabled(true);
@@ -39,11 +40,9 @@ public class Editor extends JPanel implements DocumentListener {
         textPane.setTabsEmulated(true);
         textPane.setTabSize(3);
         textPane.getDocument().addDocumentListener(this);
-        //textArea.setBackground(new java.awt.Color(224, 255, 224));
-        //textArea.setUseSelectedTextColor(true);
-        //textArea.setLineWrap(true);
         ToolTipManager.sharedInstance().registerComponent(textPane);
         ErrorStrip errorStrip = new ErrorStrip(textPane);
+        errorStrip.setCaretMarkerColor(MaterialColors.RED_800);
 
         LanguageSupportFactory lsf = LanguageSupportFactory.get();
         LanguageSupport support = lsf.getSupportFor(SYNTAX_STYLE_JAVA);
@@ -53,11 +52,9 @@ public class Editor extends JPanel implements DocumentListener {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        LanguageSupportFactory.get().register(textPane);
         changeStyleViaThemeXml();
         changeStyleProgrammatically();
         setFont(textPane,monoCode.deriveFont(14f));
-
 
         RTextScrollPane code = new RTextScrollPane(textPane);
 
@@ -67,19 +64,13 @@ public class Editor extends JPanel implements DocumentListener {
         JPanel cp = new JPanel(new BorderLayout());
         cp.add(code);
         cp.add(errorStrip, BorderLayout.LINE_END);
-        this.add(cp);
+        return cp;
     }
 
-
-
-        private void changeStyleProgrammatically() {
-
+    private void changeStyleProgrammatically() {
         // Set the font for all token types.
         setFont(textPane, new Font("monoCode", Font.PLAIN, 16));
-
-
         textPane.revalidate();
-
     }
 
     public static void setFont(RSyntaxTextArea textArea, Font font) {
@@ -104,12 +95,6 @@ public class Editor extends JPanel implements DocumentListener {
         } catch (IOException ioe) { // Never happens
             ioe.printStackTrace();
         }
-    }
-
-
-    private void panelConfig () {
-        this.setLayout(new GridLayout());
-
     }
 
     public static void newFile() {

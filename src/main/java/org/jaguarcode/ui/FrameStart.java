@@ -1,8 +1,7 @@
 package org.jaguarcode.ui;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.theme.DarculaTheme;
 import org.jaguarcode.ui.editor.Editor;
 
 import javax.swing.*;
@@ -11,8 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.logging.Level;
 
 import static org.jaguarcode.ui.editor.Editor.*;
 
@@ -20,22 +18,23 @@ public class FrameStart extends JFrame implements ActionListener {
 
     private JMenuBar menu;
     private JMenuItem copy, paste, cut;
+    public static ImageIcon openFolder;
 
     public FrameStart () {
-        ConfigWindow();
-        this.add(new PanelManager());
-        menu = new JMenuBar();
-        setJMenuBar(menu);
-        buildMenu();
-        this.pack();
-        //maximize window
-        this.setExtendedState(this.getExtendedState() | this.MAXIMIZED_BOTH);
-
+        setIcons();
+        buildFrame();
     }
 
-    private void buildMenu() {
+    private void setIcons () {
+        openFolder = new ImageIcon("src\\main\\resources\\open.png");
+    }
+
+    private JMenuBar buildMenu() {
+        menu = new JMenuBar();
         buildFileMenu();
         buildEditMenu();
+
+        return menu;
     }
 
     private void buildFileMenu() {
@@ -51,7 +50,7 @@ public class FrameStart extends JFrame implements ActionListener {
         n.setIcon(new ImageIcon("src\\main\\resources\\file.png"));
         file.add(n);
         JMenuItem open = new JMenuItem("Open");
-        open.setIcon(new ImageIcon("src\\main\\resources\\open.png"));
+        open.setIcon(openFolder);
         file.add(open);
         open.addActionListener( e -> {
             loadFileMenu();
@@ -119,13 +118,25 @@ public class FrameStart extends JFrame implements ActionListener {
         edit.add(sall);
     }
 
-    public void ConfigWindow () {
-        this.setTitle("Jaguar Code | Aprende a programar");
-        this.setMinimumSize (new Dimension(1280, 700));
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new GridLayout());
-        this.setVisible(true);
+    private void buildFrame () {
+        LafManager.setTheme(new DarculaTheme());
+        LafManager.install();
+        LafManager.enabledPreferenceChangeReporting(false);
+        LafManager.setDecorationsEnabled(true);
+        LafManager.setLogLevel(Level.FINE);
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(PanelManager.getContent());
+        frame.setJMenuBar(buildMenu());
+        frame.pack();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension dim = new Dimension(screenSize.width /2,
+                screenSize.height / 2);
+        frame.setMinimumSize(dim);
+        frame.setExtendedState(this.getExtendedState() | this.MAXIMIZED_BOTH);
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 
     @Override

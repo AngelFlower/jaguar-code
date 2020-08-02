@@ -1,7 +1,5 @@
 package org.jaguarcode.ui.files;
 
-import mdlaf.utils.MaterialColors;
-import org.fife.rsta.ac.AbstractSourceTree;
 import org.jaguarcode.ui.editor.Editor;
 
 import javax.swing.*;
@@ -41,7 +39,6 @@ public class PanelFiles extends JPanel {
 
         treeModel = new DefaultTreeModel(root);
 
-
         tree = new JTree(treeModel);
         tree.setShowsRootHandles(true);
 
@@ -50,7 +47,6 @@ public class PanelFiles extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-
 
                 if (e.getClickCount() == 2 && !e.isConsumed()) {
                     e.consume();
@@ -71,19 +67,16 @@ public class PanelFiles extends JPanel {
             }
 
         };
+
         tree.addMouseListener(ml);
 
-
         JScrollPane scrollPane = new JScrollPane(tree);
-
 
         this.add(scrollPane);
 
         CreateChildNodes ccn =
                 new CreateChildNodes(fileRoot, root);
         new Thread(ccn).start();
-
-
 
     }
 
