@@ -1,0 +1,39 @@
+plugins {
+    id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'io.github.vincenzopalazzo:material-ui-swing:1.1.1-rc4'
+    implementation("com.github.weisj:darklaf-core:2.4.1")
+    // https://mvnrepository.com/artifact/com.fifesoft/rsyntaxtextarea
+    compile group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '3.1.1'
+    implementation 'com.fifesoft:autocomplete:3.1.0'// https://mvnrepository.com/artifact/com.fifesoft/languagesupport
+    compile group: 'com.fifesoft', name: 'languagesupport', version: '3.1.0'
+    // https://mvnrepository.com/artifact/com.fifesoft/spellchecker
+    compile group: 'com.fifesoft', name: 'spellchecker', version: '3.1.0'
+
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "org.jaguarcode.main"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+application {
+    mainClassName = 'org.jaguarcode.main'
+}
+
+
