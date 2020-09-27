@@ -1,5 +1,7 @@
 package org.jaguarcode.ui.editor;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +21,7 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class FindDialog extends JDialog implements ActionListener, KeyListener {
 
-    Editor parent;
+    RSyntaxTextArea parent;
     JLabel label;
     JTextField textField;
     JCheckBox caseSensitive;
@@ -27,7 +29,7 @@ public class FindDialog extends JDialog implements ActionListener, KeyListener {
     boolean finishedFinding = true;
     Matcher matcher;
 
-    public FindDialog(Editor parent, boolean modal) {
+    public FindDialog(RSyntaxTextArea parent, boolean modal) {
         this.parent = parent;
         getContentPane().addKeyListener(this);
         getContentPane().setFocusable(true);
@@ -74,8 +76,8 @@ public class FindDialog extends JDialog implements ActionListener, KeyListener {
             if (matcher.find()) {
                 int selectionStart = matcher.start();
                 int selectionEnd = matcher.end();
-                parent.textPane.moveCaretPosition(matcher.start());
-                parent.textPane.select(selectionStart, selectionEnd);
+                parent.moveCaretPosition(matcher.start());
+                parent.select(selectionStart, selectionEnd);
             } else {
                 finishedFinding = true;
                 JOptionPane.showMessageDialog(this, "You have reached the end of the file", "End of file",
@@ -83,7 +85,7 @@ public class FindDialog extends JDialog implements ActionListener, KeyListener {
                 // closeDialog();
             }
         } else {
-            matcher = Pattern.compile(pattern).matcher(parent.textPane.getText());
+            matcher = Pattern.compile(pattern).matcher(parent.getText());
             finishedFinding = false;
             find(pattern);
         }

@@ -1,5 +1,10 @@
 package org.jaguarcode.ui.editor;
 
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.components.text.SearchEvent;
+import com.github.weisj.darklaf.components.text.SearchListener;
+import com.github.weisj.darklaf.components.text.SearchTextField;
+import com.github.weisj.darklaf.components.text.SearchTextFieldWithHistory;
 import mdlaf.utils.MaterialColors;
 import org.fife.rsta.ac.LanguageSupport;
 import org.fife.rsta.ac.LanguageSupportFactory;
@@ -56,14 +61,27 @@ public class Editor extends JPanel implements DocumentListener {
         changeStyleProgrammatically();
         setFont(textPane,monoCode.deriveFont(14f));
 
+
+
         RTextScrollPane code = new RTextScrollPane(textPane);
+        OverlayScrollPane scrollPane = new OverlayScrollPane(code);
 
         code.setFoldIndicatorEnabled(true);
         code.setLineNumbersEnabled(true);
 
-        JPanel cp = new JPanel(new BorderLayout());
-        cp.add(code);
-        cp.add(errorStrip, BorderLayout.LINE_END);
+        SearchTextFieldWithHistory search = new SearchTextFieldWithHistory("",20);
+        search.addSearchListener(new CustomSearchListener());
+        search.setAlignmentX(0.0f);
+        search.setAlignmentY(0.0f);
+        search.setMaximumSize(new Dimension(400,30));
+
+        JPanel cp = new JPanel();
+        cp.setLayout(new OverlayLayout(cp));
+        cp.add(search,0);
+        cp.add(scrollPane, 1);
+
+        cp.add(errorStrip,2);
+
         return cp;
     }
 
@@ -177,3 +195,10 @@ public class Editor extends JPanel implements DocumentListener {
 }
 
 
+
+class CustomSearchListener implements SearchListener {
+
+    public void searchPerformed(final SearchEvent e) {
+        System.out.println("Searched for " + e.getText());
+    }
+}

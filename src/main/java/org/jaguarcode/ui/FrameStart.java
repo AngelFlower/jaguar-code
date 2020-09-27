@@ -3,6 +3,7 @@ package org.jaguarcode.ui;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import org.jaguarcode.ui.editor.Editor;
+import org.jaguarcode.ui.editor.FindDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,7 +108,9 @@ public class FrameStart extends JFrame implements ActionListener {
         // find
         JMenuItem find = new JMenuItem("Find");
         find.setMnemonic('F');
-        find.addActionListener(this);
+        find.addActionListener(e -> {
+            new FindDialog(textPane, true).showDialog();
+        });
         edit.add(find);
         find.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
         // select all

@@ -28,9 +28,8 @@ public class PanelFiles extends JPanel {
     }
 
     public void panelConfig () {
-        //this.setPreferredSize(new Dimension(250,2800));
         this.setLayout(new GridLayout());
-        this.setBorder(new EmptyBorder(10, 1, 1, 1));
+        this.setBorder(new EmptyBorder(1, 1, 1, 1));
     }
 
     public void files () {
